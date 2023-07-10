@@ -1,25 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Watchlists from './Pages/WatchListPage';
+import Navbar from './Components/Header';
+import ScreenerPage from "./Pages/ScreenerPage";
+import CryptoListPage from "./Pages/CryptoListPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Watchlists />} />
+          <Route path="/screener" element={<ScreenerPage />} />
+          <Route path="/watchlist/:watchlistId" element={<CryptoListPage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

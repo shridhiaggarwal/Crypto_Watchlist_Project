@@ -1,0 +1,148 @@
+{
+  "watchlists": [
+    {
+      "id": 1,
+      "name": "Watchlist 1",
+      "coins": [
+        {
+          "rank": 1,
+          "symbol": "BTC",
+          "name": "Bitcoin",
+          "image": "https://example.com/bitcoin.jpg",
+          "price": 34250.45,
+          "change": 0.0234,
+          "volume24h": 135000.56,
+          "mktCap": 6547896547.21
+        },
+        {
+          "rank": 2,
+          "symbol": "ETH",
+          "name": "Ethereum",
+          "image": "https://example.com/ethereum.jpg",
+          "price": 2200.78,
+          "change": -0.0145,
+          "volume24h": 98000.34,
+          "mktCap": 5876541254.89
+        },
+        {
+          "rank": 3,
+          "symbol": "XRP",
+          "name": "Ripple",
+          "image": "https://example.com/ripple.jpg",
+          "price": 0.5432,
+          "change": 0.0012,
+          "volume24h": 72000.12,
+          "mktCap": 2876543542.43
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Watchlist 2",
+      "coins": [
+        {
+          "rank": 4,
+          "symbol": "LTC",
+          "name": "Litecoin",
+          "image": "https://example.com/litecoin.jpg",
+          "price": 146.25,
+          "change": 0.0065,
+          "volume24h": 48000.78,
+          "mktCap": 1876542354.67
+        },
+        {
+          "rank": 5,
+          "symbol": "ADA",
+          "name": "Cardano",
+          "image": "https://example.com/cardano.jpg",
+          "price": 1.35,
+          "change": -0.0025,
+          "volume24h": 62000.45,
+          "mktCap": 1476543654.21
+        },
+        {
+          "rank": 6,
+          "symbol": "DOT",
+          "name": "Polkadot",
+          "image": "https://example.com/polkadot.jpg",
+          "price": 16.85,
+          "change": 0.0356,
+          "volume24h": 41000.12,
+          "mktCap": 987654354.56
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Watchlist 3",
+      "coins": [
+        {
+          "rank": 7,
+          "symbol": "LINK",
+          "name": "Chainlink",
+          "image": "https://example.com/chainlink.jpg",
+          "price": 20.18,
+          "change": -0.0148,
+          "volume24h": 38000.67,
+          "mktCap": 876543547.43
+        },
+        {
+          "rank": 8,
+          "symbol": "BCH",
+          "name": "Bitcoin Cash",
+          "image": "https://example.com/bitcoin_cash.jpg",
+          "price": 476.92,
+          "change": 0.0089,
+          "volume24h": 32000.56,
+          "mktCap": 765432235.21
+        },
+        {
+          "rank": 9,
+          "symbol": "XLM",
+          "name": "Stellar",
+          "image": "https://example.com/stellar.jpg",
+          "price": 0.2876,
+          "change": -0.0014,
+          "volume24h": 28000.34,
+          "mktCap": 654321789.67
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Watchlist 4",
+      "coins": [
+        {
+          "rank": 10,
+          "symbol": "DOGE",
+          "name": "Dogecoin",
+          "image": "https://example.com/dogecoin.jpg",
+          "price": 0.2134,
+          "change": 0.0036,
+          "volume24h": 25000.78,
+          "mktCap": 543219876.12
+        },
+        {
+          "rank": 11,
+          "symbol": "EOS",
+          "name": "EOS",
+          "image": "https://example.com/eos.jpg",
+          "price": 3.89,
+          "change": 0.0012,
+          "volume24h": 23000.56,
+          "mktCap": 432198765.98
+        },
+        {
+          "rank": 12,
+          "symbol": "XMR",
+          "name": "Monero",
+          "image": "https://example.com/monero.jpg",
+          "price": 97.54,
+          "change": -0.0035,
+          "volume24h": 21000.34,
+          "mktCap": 321987654.76
+        }
+      ]
+    }
+  ]
+}
