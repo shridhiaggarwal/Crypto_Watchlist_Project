@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { List, ListItem, Box, Typography } from "@material-ui/core";
+import {
+  Box,
+  Typography,
+  Button,
+  Snackbar,
+  IconButton,
+} from "@material-ui/core";
 import { useNavigate } from "react-router";
-import styled from 'styled-components';
-import watchlistsJson from "../../Jsons/watchlists.json"
+import styled from "styled-components";
+import watchlistsJson from "../../Jsons/watchlists.json";
+import WatchlistCard from "./components/watchlistCard";
+import CloseIcon from "@material-ui/icons/Close";
 
-interface ICoinProps {
+export interface ICoinProps {
   rank: number;
   symbol: string;
   name: string;
@@ -15,7 +23,7 @@ interface ICoinProps {
   mktCap: number;
 }
 
-interface IWatchlistProps {
+export interface IWatchlistProps {
   id: number;
   name: string;
   coins: Array<ICoinProps>;
@@ -26,18 +34,46 @@ const StyledPageBox = styled(Box)`
 `;
 
 const StyledTypography = styled(Typography)<{
+  "font-color"?: string;
   margin?: string;
+  component?: string;
 }>`
-  margin: ${props => props.margin};
+  color: ${(props) => props["font-color"]};
+  margin: ${(props) => props["margin"]};
+`;
+
+const StyledWatchlistBox = styled(Box)`
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 32px;
+`;
+
+const StyledTitleBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const StyledButton = styled(Button)`
+  text-transform: none;
 `;
 
 const Watchlists = () => {
   const navigate = useNavigate();
   const watchlists: Array<IWatchlistProps> = watchlistsJson.watchlists;
+  const [snackbarState, setSnackbarState] = React.useState(false);
 
   const handleWatchlistClick = (watchlistId: number) => {
     localStorage.setItem("watchlistId", JSON.stringify(watchlistId));
     navigate(`/watchlist/${watchlistId}`);
+  };
+
+  const featureComingSoon = () => {
+    setSnackbarState(true);
+  };
+
+  const handleClose = () => {
+    setSnackbarState(false);
   };
 
   // const handleAddCrypto = (watchlistId: number, assetId: string) => {
@@ -62,25 +98,54 @@ const Watchlists = () => {
 
   return (
     <StyledPageBox>
-      <StyledTypography variant="h4" margin="0 0 8px 0">
-        Crypto Watchlists
+      <StyledTitleBox>
+        <StyledTypography variant="h4" margin="0 0 8px 0">
+          Crypto Watchlists
+        </StyledTypography>
+        <StyledButton
+          variant="contained"
+          color="primary"
+          onClick={() => featureComingSoon()}
+        >
+          Create WatchList
+        </StyledButton>
+      </StyledTitleBox>
+      <StyledTypography
+        variant="body1"
+        color="textSecondary"
+        margin="0 0 32px 0"
+      >
+        Track and discover the most interesting cryptocurrencies based on
+        market, CryptoWatch and CoinGecko activity.
       </StyledTypography>
-      <StyledTypography variant="body2" margin="0 0 32px 0">
-        Which cryptocurrencies are people more interested in? Track and discover
-        the most interesting cryptocurrencies based on market and CoinGecko
-        activity.
-      </StyledTypography>
-      <List>
-        {watchlists.map((watchlist) => (
-          <ListItem
-            key={watchlist.id}
-            button
-            onClick={() => handleWatchlistClick(watchlist.id)}
-          >
-            {watchlist.name}
-          </ListItem>
+      <StyledWatchlistBox>
+        {watchlists.map((watchlist, index) => (
+          <WatchlistCard
+            key={`watchlist-${index}`}
+            watchlistData={watchlist}
+            onWatchlistClick={handleWatchlistClick}
+          />
         ))}
-      </List>
+      </StyledWatchlistBox>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackbarState}
+        onClose={handleClose}
+        autoHideDuration={6000}
+        message="This feature is not available."
+        key={"bottom" + "right"}
+        action={
+          <React.Fragment>
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              onClick={handleClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
     </StyledPageBox>
   );
 };
