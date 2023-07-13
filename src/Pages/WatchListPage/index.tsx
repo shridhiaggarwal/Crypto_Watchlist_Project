@@ -9,7 +9,7 @@ import styled from "styled-components";
 import watchlistsJson from "../../Jsons/watchlists.json";
 import WatchlistCard from "./components/watchlistCard";
 import CloseIcon from "@material-ui/icons/Close";
-import { ICoinProps } from "../CryptoTable";
+import { ICoinProps } from "../../Containers/CryptoTable";
 
 export interface IWatchlistProps {
   id: number;

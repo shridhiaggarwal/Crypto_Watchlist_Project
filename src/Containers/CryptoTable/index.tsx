@@ -9,6 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import { TableOrder } from "../../Utils/common";
 import styled from "styled-components";
+import CryptoGraph from "../CryptoGraph";
+import Box from "@material-ui/core/Box";
 
 interface ITableHeadCells {
   id: string;
@@ -62,7 +64,7 @@ const StyledTableHead = styled(TableCell)`
   font-weight: bolder;
 `;
 
-const StyledTableCell = styled(TableCell)`
+const StyledAlignedCell = styled(Box)`
   display: flex;
   align-items: center;
 `;
@@ -144,7 +146,6 @@ const CryptoTable = (props: ICryptoTableProps) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   console.log("rendering CryptoTable");
-  console.log("rows", rows);
 
   const descendingComparator = (a: any, b: any, orderBy: any) => {
     if (orderBy === "coinNameIcon") {
@@ -229,17 +230,21 @@ const CryptoTable = (props: ICryptoTableProps) => {
                     >
                       {row.rank}
                     </TableCell>
-                    <StyledTableCell align="left">
-                      <StyledImage src={row.image} />
-                      {row.name}
-                    </StyledTableCell>
+                    <TableCell align="left">
+                      <StyledAlignedCell>
+                        <StyledImage src={row.image} />
+                        {row.name}
+                      </StyledAlignedCell>
+                    </TableCell>
                     <TableCell align="left">{row.price}</TableCell>
                     <TableCell align="left">{row.change}</TableCell>
                     <TableCell align="left">{row.volume24h}</TableCell>
                     <TableCell align="left">{row.mktCap}</TableCell>
-                    {/* {row.last7Days && (
-                      <TableCell align="left">{row.last7Days}</TableCell>
-                    )} */}
+                    <TableCell align="left">
+                      {row.last7Days && (
+                        <CryptoGraph graphData={row.last7Days} />
+                      )}
+                    </TableCell>
                   </TableRow>
                 );
               })}

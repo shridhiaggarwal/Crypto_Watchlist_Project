@@ -9,7 +9,7 @@ import { IWatchlistProps } from "../WatchListPage";
 import watchlistsJson from "../../Jsons/watchlists.json";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import CryptoTable from "../CryptoTable";
+import CryptoTable from "../../Containers/CryptoTable";
 
 const StyledPageBox = styled(Box)`
   margin: 16px 16px;

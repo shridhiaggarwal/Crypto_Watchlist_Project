@@ -1,12 +1,12 @@
 import React from "react";
 import { useFetchCryptoListData } from "../../Hooks/use-fetch-cryptolist-data/use-fetch-cryptolist-data.hook";
 import Box from "@material-ui/core/Box";
-import CryptoTable from "../CryptoTable";
+import CryptoTable from "../../Containers/CryptoTable";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import styled from 'styled-components';
 import cryptoCoinsJson from "../../Jsons/cryptoCoins.json"
-import { ICoinProps } from "../CryptoTable";
+import { ICoinProps } from "../../Containers/CryptoTable";
 
 const StyledPageBox = styled(Box)`
   margin: 32px 48px;
@@ -17,39 +17,6 @@ const StyledTypography = styled(Typography)<{
 }>`
   margin: ${props => props.margin};
 `;
-
-const tableRows = [
-  {
-    rank: 1,
-    coinSymbol: "BTC",
-    coinName: "bitcoin",
-    coinImage: "image",
-    price: 20000,
-    volume24h: 3.4,
-    mktCap: 69,
-    last7Days: 4.3,
-  },
-  {
-    rank: 3,
-    coinSymbol: "ETH",
-    coinName: "Ethereum",
-    coinImage: "image",
-    price: 2200.78,
-    volume24h: 98000.34,
-    mktCap: 67,
-    last7Days: 4,
-  },
-  {
-    rank: 2,
-    coinSymbol: "BTC",
-    coinName: "SILVER",
-    coinImage: "image",
-    price: 5000,
-    volume24h: 3.6,
-    mktCap: 57,
-    last7Days: 40,
-  },
-];
 
 const ScreenerPage = () => {
   const [cryptoList, isListLoading, errorListData] = [ [], false, false] //useFetchCryptoListData();
