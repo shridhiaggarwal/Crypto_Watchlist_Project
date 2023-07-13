@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -25,38 +24,43 @@ interface ITableHeadProps {
   onRequestSort: (event: any, headCellId: string) => void;
 }
 
-interface ITableRowProps {
-  rank: number;
-  coinSymbol: string;
-  coinImage: any;
-  coinName: string;
+export interface IHistoricicalData {
+  timestamp: string;
   price: number;
+  change: number;
+}
+export interface ICoinProps {
+  rank: number;
+  symbol: string;
+  name: string;
+  image: string;
+  price: number;
+  change: number;
   volume24h: number;
   mktCap: number;
-  last7Days?: any;
+  last7days?: Array<IHistoricicalData>;
 }
 
 interface ICryptoTableProps {
-  rows: Array<ITableRowProps>;
+  rows: Array<ICoinProps>;
+  showLast7Days: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
-  tableHead: {
-    fontWeight: "bolder",
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
-  },
-}));
+const StyledVisuallyHidden = styled.span`
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0px;
+  position: absolute;
+  top: 20px;
+  width: 1px;
+`;
 
+const StyledTableHead = styled(TableCell)`
+  font-weight: bolder;
+`;
 
 const StyledTableCell = styled(TableCell)`
   display: flex;
@@ -69,69 +73,35 @@ const StyledImage = styled.img`
   margin-right: 12px;
 `;
 
-const tableHeadCells: ITableHeadCells[] = [
-  { id: "rank", align: "left", disablePadding: true, label: "#" },
-  { id: "coinNameIcon", align: "left", disablePadding: false, label: "Coin" },
-  { id: "price", align: "left", disablePadding: false, label: "Price" },
-  {
-    id: "Volume24h",
-    align: "left",
-    disablePadding: false,
-    label: "24h Volume",
-  },
-  { id: "mktCap", align: "left", disablePadding: false, label: "Mkt Cap" },
-  {
-    id: "last7Days",
-    align: "left",
-    disablePadding: false,
-    label: "Last 7 Days",
-  },
-];
+const generateTableHeadCells = (showLast7Days: boolean) => {
+  let tableHeadCells: ITableHeadCells[] = [
+    { id: "rank", align: "left", disablePadding: true, label: "#" },
+    { id: "coinNameIcon", align: "left", disablePadding: false, label: "Coin" },
+    { id: "price", align: "left", disablePadding: false, label: "Price" },
+    { id: "change", align: "left", disablePadding: false, label: "Change" },
+    {
+      id: "volume24h",
+      align: "left",
+      disablePadding: false,
+      label: "24h Volume",
+    },
+    { id: "mktCap", align: "left", disablePadding: false, label: "Mkt Cap" },
+  ];
 
-const descendingComparator = (a: any, b: any, orderBy: any) => {
-  if (orderBy === "coinNameIcon") {
-    // Sort by coin name
-    if (b.coinName < a.coinName) {
-      return -1;
-    }
-    if (b.coinName > a.coinName) {
-      return 1;
-    }
-    return 0;
-  } else {
-    // Sort by other columns
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
+  if (showLast7Days) {
+    tableHeadCells.push({
+      id: "last7Days",
+      align: "left",
+      disablePadding: false,
+      label: "Last 7 Days",
+    });
   }
-};
 
-
-const getComparator = (order: TableOrder, orderBy: any) => {
-  return order === TableOrder.DESC
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-};
-
-const stableSort = (array: Array<ITableRowProps>, comparator: any) => {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  let result = stabilizedThis.map((el) => el[0]);
-  console.log(result);
-  return result;
+  return tableHeadCells;
 };
 
 const CryptoTableHead = (props: ITableHeadProps) => {
   const { headCells, order, orderBy, onRequestSort } = props;
-  const classes = useStyles();
 
   const createSortHandler = (headCellId: string) => (event: any) => {
     onRequestSort(event, headCellId);
@@ -141,12 +111,11 @@ const CryptoTableHead = (props: ITableHeadProps) => {
     <TableHead>
       <TableRow>
         {headCells.map((headCell: ITableHeadCells) => (
-          <TableCell
+          <StyledTableHead
             key={headCell.id}
             align={headCell.align}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            className={classes.tableHead}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -154,13 +123,13 @@ const CryptoTableHead = (props: ITableHeadProps) => {
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              {/* {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
+              {orderBy === headCell.id ? (
+                <StyledVisuallyHidden>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null} */}
+                </StyledVisuallyHidden>
+              ) : null}
             </TableSortLabel>
-          </TableCell>
+          </StyledTableHead>
         ))}
       </TableRow>
     </TableHead>
@@ -168,13 +137,53 @@ const CryptoTableHead = (props: ITableHeadProps) => {
 };
 
 const CryptoTable = (props: ICryptoTableProps) => {
-  const { rows } = props;
+  const { rows, showLast7Days } = props;
   const [order, setOrder] = React.useState<TableOrder>(TableOrder.ASC);
   const [orderBy, setOrderBy] = React.useState("rank");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   console.log("rendering CryptoTable");
+  console.log("rows", rows);
+
+  const descendingComparator = (a: any, b: any, orderBy: any) => {
+    if (orderBy === "coinNameIcon") {
+      // Sort by coin name
+      if (b.coinName < a.coinName) {
+        return -1;
+      }
+      if (b.coinName > a.coinName) {
+        return 1;
+      }
+      return 0;
+    } else {
+      // Sort by other columns
+      if (b[orderBy] < a[orderBy]) {
+        return -1;
+      }
+      if (b[orderBy] > a[orderBy]) {
+        return 1;
+      }
+      return 0;
+    }
+  };
+
+  const getComparator = (order: TableOrder, orderBy: any) => {
+    return order === TableOrder.DESC
+      ? (a: any, b: any) => descendingComparator(a, b, orderBy)
+      : (a: any, b: any) => -descendingComparator(a, b, orderBy);
+  };
+
+  const stableSort = (array: Array<ICoinProps>, comparator: any) => {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a: any, b: any) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    let result = stabilizedThis.map((el) => el[0]);
+    return result;
+  };
 
   const handleRequestSort = (event: any, property: string) => {
     const isAsc = orderBy === property && order === TableOrder.ASC;
@@ -199,7 +208,7 @@ const CryptoTable = (props: ICryptoTableProps) => {
       <TableContainer>
         <Table>
           <CryptoTableHead
-            headCells={tableHeadCells}
+            headCells={generateTableHeadCells(showLast7Days)}
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -221,13 +230,16 @@ const CryptoTable = (props: ICryptoTableProps) => {
                       {row.rank}
                     </TableCell>
                     <StyledTableCell align="left">
-                      <StyledImage src={row.coinImage} />
-                      {row.coinName}
+                      <StyledImage src={row.image} />
+                      {row.name}
                     </StyledTableCell>
                     <TableCell align="left">{row.price}</TableCell>
+                    <TableCell align="left">{row.change}</TableCell>
                     <TableCell align="left">{row.volume24h}</TableCell>
                     <TableCell align="left">{row.mktCap}</TableCell>
-                    {row.last7Days && <TableCell align="left">{row.last7Days}</TableCell>}
+                    {/* {row.last7Days && (
+                      <TableCell align="left">{row.last7Days}</TableCell>
+                    )} */}
                   </TableRow>
                 );
               })}

@@ -1,27 +1,15 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Snackbar,
-  IconButton,
-} from "@material-ui/core";
+import React from "react";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import watchlistsJson from "../../Jsons/watchlists.json";
 import WatchlistCard from "./components/watchlistCard";
 import CloseIcon from "@material-ui/icons/Close";
-
-export interface ICoinProps {
-  rank: number;
-  symbol: string;
-  name: string;
-  image: string;
-  price: number;
-  change: number;
-  volume24h: number;
-  mktCap: number;
-}
+import { ICoinProps } from "../CryptoTable";
 
 export interface IWatchlistProps {
   id: number;
@@ -97,12 +85,12 @@ const Watchlists = () => {
   //   }
   // };
 
+  console.log("render Watchlists");
+
   return (
     <StyledPageBox>
       <StyledTitleBox>
-        <StyledTypography variant="h4">
-          Crypto Watchlists
-        </StyledTypography>
+        <StyledTypography variant="h4">Crypto Watchlists</StyledTypography>
         <StyledButton
           variant="contained"
           color="primary"

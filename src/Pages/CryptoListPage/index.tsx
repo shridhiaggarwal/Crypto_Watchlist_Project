@@ -1,5 +1,7 @@
 import React from "react";
-import { List, ListItem, Typography, Box, Button } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
@@ -40,17 +42,18 @@ const CryptoListPage = () => {
 
   const generateRowData = (watchlistCoins: any) => {
     let tableRows = watchlistCoins.map((coin: any, index: number) => {
-      const { rank, symbol, name, image, price, change, volume24h, mktCap } =
+      const { rank, symbol, name, image, price, change, volume24h, mktCap, last7days } =
         coin;
       return {
         rank: rank,
-        coinSymbol: symbol,
-        coinImage: image,
-        coinName: name,
+        symbol: symbol,
+        image: image,
+        name: name,
         price: price,
+        change: change,
         volume24h: volume24h,
         mktCap: mktCap,
-        last7Days: change,
+        last7Days: last7days,
       };
     });
     return tableRows;
@@ -65,13 +68,7 @@ const CryptoListPage = () => {
     setSelectedWatchlist(result[0]);
   }, [watchlists]);
 
-  // React.useEffect(() => {
-  //   if (selectedWatchlist) {
-  //     generateRowData(selectedWatchlist.coins);
-  //   }
-  // }, [watchlists, selectedWatchlist]);
-
-  console.log("selectedWatchlist", selectedWatchlist);
+  console.log("render CryptoListPage");
 
   return (
     <StyledPageBox>
@@ -89,7 +86,7 @@ const CryptoListPage = () => {
             <StyledTypography variant="h5" margin="0 0 16px 0">
               {selectedWatchlist.name}
             </StyledTypography>
-            <CryptoTable rows={generateRowData(selectedWatchlist.coins)} />
+            <CryptoTable rows={generateRowData(selectedWatchlist.coins)} showLast7Days={false}/>
           </>
         ) : (
           <>
@@ -99,13 +96,6 @@ const CryptoListPage = () => {
           </>
         )}
       </StyledPageContent>
-      {/* <List>
-        {cryptocurrencies.map((crypto) => (
-          <ListItem key={crypto.id}>
-            {crypto.name} ({crypto.symbol})
-          </ListItem>
-        ))}
-      </List> */}
     </StyledPageBox>
   );
 };

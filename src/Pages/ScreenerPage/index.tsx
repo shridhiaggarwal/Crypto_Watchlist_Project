@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useFetchCryptoListData } from "../../Hooks/use-fetch-cryptolist-data/use-fetch-cryptolist-data.hook";
 import Box from "@material-ui/core/Box";
 import CryptoTable from "../CryptoTable";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import styled from 'styled-components';
+import cryptoCoinsJson from "../../Jsons/cryptoCoins.json"
+import { ICoinProps } from "../CryptoTable";
 
 const StyledPageBox = styled(Box)`
   margin: 32px 48px;
@@ -49,35 +51,30 @@ const tableRows = [
   },
 ];
 
-const generateRowData = (cryptoList: any) => {
-  //   let tableRows = cryptoList.map((coin: any, index: number)=>{
-  //     const coinData = {};
-  //     const coinID: coinData.id;
-  //     const coinSymbol: coinData.symbol
-  // "symbol": "btc",
-  // "name": "Bitcoin",
-  //     const {rank, coinNameIcon, price, Volume24h, mktCap, last7Days} = coin;
-  //     return {
-  //       rank: 1,
-  //       coinNameIcon: "bitcoin",
-  //       price: 20000,
-  //       Volume24h: 3.7,
-  //       mktCap: 67,
-  //       last7Days: 4.3,
-  //     }
-  //   })
-};
-
 const ScreenerPage = () => {
   const [cryptoList, isListLoading, errorListData] = [ [], false, false] //useFetchCryptoListData();
+  const cryptoCoins: Array<ICoinProps> = cryptoCoinsJson.coins;
 
   console.log("rendering ScreenerPage");
 
-  useEffect(() => {
-    if (cryptoList) {
-      generateRowData(cryptoList);
-    }
-  }, [cryptoList]);
+  const generateRowData = (cryptoCoins: any) => {
+    let tableRows = cryptoCoins.map((coin: any, index: number) => {
+      const { rank, symbol, name, image, price, change, volume24h, mktCap, last7days } =
+        coin;
+      return {
+        rank: rank,
+        symbol: symbol,
+        image: image,
+        name: name,
+        price: price,
+        change: change,
+        volume24h: volume24h,
+        mktCap: mktCap,
+        last7Days: last7days,
+      };
+    });
+    return tableRows;
+  };
 
   return (
     <StyledPageBox>
@@ -87,7 +84,7 @@ const ScreenerPage = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <CryptoTable rows={tableRows} />
+        <CryptoTable rows={generateRowData(cryptoCoins)} showLast7Days={true}/>
       )}
     </StyledPageBox>
   );
