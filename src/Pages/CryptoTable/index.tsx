@@ -9,6 +9,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import { TableOrder } from "../../Utils/common";
+import styled from "styled-components";
 
 interface ITableHeadCells {
   id: string;
@@ -55,6 +56,18 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
 }));
+
+
+const StyledTableCell = styled(TableCell)`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledImage = styled.img`
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+`;
 
 const tableHeadCells: ITableHeadCells[] = [
   { id: "rank", align: "left", disablePadding: true, label: "#" },
@@ -207,12 +220,12 @@ const CryptoTable = (props: ICryptoTableProps) => {
                     >
                       {row.rank}
                     </TableCell>
-                    <TableCell align="left">
-                      {row.coinImage}
+                    <StyledTableCell align="left">
+                      <StyledImage src={row.coinImage} />
                       {row.coinName}
-                    </TableCell>
+                    </StyledTableCell>
                     <TableCell align="left">{row.price}</TableCell>
-                    <TableCell align="left">{row.Volume24h}</TableCell>
+                    <TableCell align="left">{row.volume24h}</TableCell>
                     <TableCell align="left">{row.mktCap}</TableCell>
                     {row.last7Days && <TableCell align="left">{row.last7Days}</TableCell>}
                   </TableRow>

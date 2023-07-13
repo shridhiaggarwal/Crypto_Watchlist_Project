@@ -71,7 +71,7 @@ const StyledImage = styled.img`
 `;
 
 const StyledDivider = styled(Divider)`
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   margin-left: -32px;
   padding: 1px;
 `;
@@ -103,7 +103,7 @@ function WatchlistCard(props: IWatchlistCard) {
         </StyledCoinsHeader>
         <StyledDivider />
         <StyledCoinsContent>
-          {watchlistData.coins.map((coin, index) => {
+          {watchlistData.coins.slice(0,10).map((coin, index) => {
             const { name, image, price } = coin;
             return (
               <StyledCoin key={`coin-${index}`}>

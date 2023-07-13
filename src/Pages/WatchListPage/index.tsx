@@ -52,6 +52,7 @@ const StyledTitleBox = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 16px;
 `;
 
 const StyledButton = styled(Button)`
@@ -99,7 +100,7 @@ const Watchlists = () => {
   return (
     <StyledPageBox>
       <StyledTitleBox>
-        <StyledTypography variant="h4" margin="0 0 8px 0">
+        <StyledTypography variant="h4">
           Crypto Watchlists
         </StyledTypography>
         <StyledButton
