@@ -11,6 +11,7 @@ import { TableOrder } from "../../Utils/common";
 import styled from "styled-components";
 import CryptoGraph from "../CryptoGraph";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 
 interface ITableHeadCells {
   id: string;
@@ -46,6 +47,8 @@ export interface ICoinProps {
 interface ICryptoTableProps {
   rows: Array<ICoinProps>;
   showLast7Days: boolean;
+  showAddButton?: boolean;
+  showRemoveButton?: boolean;
 }
 
 const StyledVisuallyHidden = styled.span`
@@ -73,6 +76,15 @@ const StyledImage = styled.img`
   width: 24px;
   height: 24px;
   margin-right: 12px;
+`;
+
+const StyledButton = styled(Button)<{
+  backgroundColor: string;
+  color: string;
+}>`
+  text-transform: none;
+  background-color: ${props => props.backgroundColor};
+  color: ${props => props.color};
 `;
 
 const generateTableHeadCells = (showLast7Days: boolean) => {
@@ -139,7 +151,7 @@ const CryptoTableHead = (props: ITableHeadProps) => {
 };
 
 const CryptoTable = (props: ICryptoTableProps) => {
-  const { rows, showLast7Days } = props;
+  const { rows, showLast7Days, showAddButton, showRemoveButton } = props;
   const [order, setOrder] = React.useState<TableOrder>(TableOrder.ASC);
   const [orderBy, setOrderBy] = React.useState("rank");
   const [page, setPage] = React.useState(0);
@@ -243,6 +255,16 @@ const CryptoTable = (props: ICryptoTableProps) => {
                     <TableCell align="left">
                       {row.last7Days && (
                         <CryptoGraph graphData={row.last7Days} />
+                      )}
+                    </TableCell>
+                    <TableCell align="left">
+                      {showAddButton && (
+                        <StyledButton variant="contained" backgroundColor="#4eaf0a" color="white" onClick={()=>{}}>Add</StyledButton>
+                      )}
+                    </TableCell>
+                    <TableCell align="left">
+                      {showRemoveButton && (
+                        <StyledButton variant="contained" backgroundColor="#DC143C" color="white" onClick={()=>{}}>Remove</StyledButton>
                       )}
                     </TableCell>
                   </TableRow>

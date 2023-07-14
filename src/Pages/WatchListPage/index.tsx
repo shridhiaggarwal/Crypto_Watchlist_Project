@@ -6,10 +6,10 @@ import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import watchlistsJson from "../../Jsons/watchlists.json";
 import WatchlistCard from "./components/watchlistCard";
 import CloseIcon from "@material-ui/icons/Close";
 import { ICoinProps } from "../../Containers/CryptoTable";
+import { useFetchWatchlistsData } from "../../Hooks/use-fetch-watchlist-data/use-fetch-watchlists-data.hook";
 
 export interface IWatchlistProps {
   id: number;
@@ -49,7 +49,7 @@ const StyledButton = styled(Button)`
 
 const Watchlists = () => {
   const navigate = useNavigate();
-  const watchlists: Array<IWatchlistProps> = watchlistsJson.watchlists;
+  const [watchlists] =  useFetchWatchlistsData();
   const [snackbarState, setSnackbarState] = React.useState(false);
 
   const handleWatchlistClick = (watchlistId: number) => {
@@ -108,7 +108,7 @@ const Watchlists = () => {
         market, CryptoWatch and CoinGecko activity.
       </StyledTypography>
       <StyledWatchlistBox>
-        {watchlists.map((watchlist, index) => (
+        {watchlists && watchlists.map((watchlist: IWatchlistProps, index: number) => (
           <WatchlistCard
             key={`watchlist-${index}`}
             watchlistData={watchlist}

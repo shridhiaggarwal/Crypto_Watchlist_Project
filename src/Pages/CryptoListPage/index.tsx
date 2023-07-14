@@ -10,6 +10,7 @@ import watchlistsJson from "../../Jsons/watchlists.json";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import CryptoTable from "../../Containers/CryptoTable";
+import { useFetchWatchlistsData } from "../../Hooks/use-fetch-watchlist-data/use-fetch-watchlists-data.hook";
 
 const StyledPageBox = styled(Box)`
   margin: 16px 16px;
@@ -32,7 +33,7 @@ const StyledButton = styled(Button)`
 const CryptoListPage = () => {
   const { watchlistId } = useParams();
   const navigate = useNavigate();
-  const watchlists: Array<IWatchlistProps> = watchlistsJson.watchlists;
+  const [watchlists] =  useFetchWatchlistsData();
   const [selectedWatchlist, setSelectedWatchlist] = React.useState<IWatchlistProps>();
 
   const handleGoBackClick = () => {
@@ -60,12 +61,14 @@ const CryptoListPage = () => {
   };
 
   React.useEffect(() => {
-    let result = watchlists.filter((watchlist) => {
-      if (watchlist.id === Number(watchlistId)) {
-        return watchlist;
-      }
-    });
-    setSelectedWatchlist(result[0]);
+    if(watchlists){
+      let result = watchlists.filter((watchlist: IWatchlistProps) => {
+        if (watchlist.id === Number(watchlistId)) {
+          return watchlist;
+        }
+      });
+      setSelectedWatchlist(result[0]);
+    }
   }, [watchlists]);
 
   console.log("render CryptoListPage");
@@ -86,7 +89,7 @@ const CryptoListPage = () => {
             <StyledTypography variant="h5" margin="0 0 16px 0">
               {selectedWatchlist.name}
             </StyledTypography>
-            <CryptoTable rows={generateRowData(selectedWatchlist.coins)} showLast7Days={false}/>
+            <CryptoTable rows={generateRowData(selectedWatchlist.coins)} showLast7Days={false} showRemoveButton={true}/>
           </>
         ) : (
           <>

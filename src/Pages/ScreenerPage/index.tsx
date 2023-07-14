@@ -51,7 +51,7 @@ const ScreenerPage = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <CryptoTable rows={generateRowData(cryptoCoins)} showLast7Days={true}/>
+        <CryptoTable rows={generateRowData(cryptoCoins)} showLast7Days={true} showAddButton={true}/>
       )}
     </StyledPageBox>
   );
