@@ -24,6 +24,28 @@ const ScreenerPage = () => {
 
   console.log("rendering ScreenerPage");
 
+  const handleAddCryptoCoin = (removeCoinSymbol: string) => {
+    debugger;
+    //update only selected watchlist and it coins array
+    // if(selectedWatchlist){
+    //   let updatedCoins = selectedWatchlist.coins.filter((coin) => coin.symbol !== removeCoinSymbol);
+    //   let updatedWatchlist = {
+    //     ...selectedWatchlist,
+    //     coins: updatedCoins,
+    //   }
+    //   setSelectedWatchlist(updatedWatchlist);
+
+    //   //update complete watchlists array in storage
+    //   let newWatchlists = watchlists.map((watchlist: IWatchlistProps) => {
+    //     if (watchlist.id === watchlistId) {
+    //       return updatedWatchlist;
+    //     }
+    //     return watchlist;
+    //   });
+    //   localStorage.setItem("watchlists", JSON.stringify(newWatchlists));
+    // }
+  }
+
   const generateRowData = (cryptoCoins: any) => {
     let tableRows = cryptoCoins.map((coin: any, index: number) => {
       const { rank, symbol, name, image, price, change, volume24h, mktCap, last7days } =

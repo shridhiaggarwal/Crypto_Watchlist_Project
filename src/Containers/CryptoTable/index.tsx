@@ -49,6 +49,7 @@ interface ICryptoTableProps {
   showLast7Days: boolean;
   showAddButton?: boolean;
   showRemoveButton?: boolean;
+  removeCryptoCoin?: (removeCoinSymbol: string) => void;
 }
 
 const StyledVisuallyHidden = styled.span`
@@ -83,8 +84,8 @@ const StyledButton = styled(Button)<{
   color: string;
 }>`
   text-transform: none;
-  background-color: ${props => props.backgroundColor};
-  color: ${props => props.color};
+  background-color: ${(props) => props.backgroundColor};
+  color: ${(props) => props.color};
 `;
 
 const generateTableHeadCells = (showLast7Days: boolean) => {
@@ -110,6 +111,13 @@ const generateTableHeadCells = (showLast7Days: boolean) => {
       label: "Last 7 Days",
     });
   }
+  
+  tableHeadCells.push({
+    id: "action",
+    align: "left",
+    disablePadding: false,
+    label: "",
+  });
 
   return tableHeadCells;
 };
@@ -151,7 +159,7 @@ const CryptoTableHead = (props: ITableHeadProps) => {
 };
 
 const CryptoTable = (props: ICryptoTableProps) => {
-  const { rows, showLast7Days, showAddButton, showRemoveButton } = props;
+  const { rows, showLast7Days, showAddButton, showRemoveButton, removeCryptoCoin } = props;
   const [order, setOrder] = React.useState<TableOrder>(TableOrder.ASC);
   const [orderBy, setOrderBy] = React.useState("rank");
   const [page, setPage] = React.useState(0);
@@ -162,10 +170,10 @@ const CryptoTable = (props: ICryptoTableProps) => {
   const descendingComparator = (a: any, b: any, orderBy: any) => {
     if (orderBy === "coinNameIcon") {
       // Sort by coin name
-      if (b.coinName < a.coinName) {
+      if (b.name < a.name) {
         return -1;
       }
-      if (b.coinName > a.coinName) {
+      if (b.name > a.name) {
         return 1;
       }
       return 0;
@@ -213,8 +221,8 @@ const CryptoTable = (props: ICryptoTableProps) => {
     setPage(0);
   };
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  // const emptyRows =
+  //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <>
@@ -259,12 +267,26 @@ const CryptoTable = (props: ICryptoTableProps) => {
                     </TableCell>
                     <TableCell align="left">
                       {showAddButton && (
-                        <StyledButton variant="contained" backgroundColor="#4eaf0a" color="white" onClick={()=>{}}>Add</StyledButton>
+                        <StyledButton
+                          variant="contained"
+                          backgroundColor="#4eaf0a"
+                          color="white"
+                          onClick={() => {}}
+                        >
+                          Add
+                        </StyledButton>
                       )}
                     </TableCell>
                     <TableCell align="left">
-                      {showRemoveButton && (
-                        <StyledButton variant="contained" backgroundColor="#DC143C" color="white" onClick={()=>{}}>Remove</StyledButton>
+                      {showRemoveButton && removeCryptoCoin && (
+                        <StyledButton
+                          variant="contained"
+                          backgroundColor="#DC143C"
+                          color="white"
+                          onClick={() => removeCryptoCoin(row.symbol)}
+                        >
+                          Remove
+                        </StyledButton>
                       )}
                     </TableCell>
                   </TableRow>

@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { IWatchlistProps } from "../WatchListPage";
-import watchlistsJson from "../../Jsons/watchlists.json";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import CryptoTable from "../../Containers/CryptoTable";
@@ -36,6 +35,27 @@ const CryptoListPage = () => {
   const [watchlists] =  useFetchWatchlistsData();
   const [selectedWatchlist, setSelectedWatchlist] = React.useState<IWatchlistProps>();
 
+  const handleRemoveCryptoCoin = (removeCoinSymbol: string) => {
+    //update only selected watchlist and it coins array
+    if(selectedWatchlist){
+      let updatedCoins = selectedWatchlist.coins.filter((coin) => coin.symbol !== removeCoinSymbol);
+      let updatedWatchlist = {
+        ...selectedWatchlist,
+        coins: updatedCoins,
+      }
+      setSelectedWatchlist(updatedWatchlist);
+
+      //update complete watchlists array in storage
+      let newWatchlists = watchlists.map((watchlist: IWatchlistProps) => {
+        if (watchlist.id === watchlistId) {
+          return updatedWatchlist;
+        }
+        return watchlist;
+      });
+      localStorage.setItem("watchlists", JSON.stringify(newWatchlists));
+    }
+  }
+
   const handleGoBackClick = () => {
     localStorage.setItem("watchlistId", JSON.stringify(""));
     navigate(`/`);
@@ -62,14 +82,10 @@ const CryptoListPage = () => {
 
   React.useEffect(() => {
     if(watchlists){
-      let result = watchlists.filter((watchlist: IWatchlistProps) => {
-        if (watchlist.id === Number(watchlistId)) {
-          return watchlist;
-        }
-      });
-      setSelectedWatchlist(result[0]);
+      let result = watchlists.find((watchlist: IWatchlistProps) => watchlist.id === watchlistId);
+      setSelectedWatchlist(result);
     }
-  }, [watchlists]);
+  }, [watchlists, watchlistId]);
 
   console.log("render CryptoListPage");
 
@@ -89,7 +105,7 @@ const CryptoListPage = () => {
             <StyledTypography variant="h5" margin="0 0 16px 0">
               {selectedWatchlist.name}
             </StyledTypography>
-            <CryptoTable rows={generateRowData(selectedWatchlist.coins)} showLast7Days={false} showRemoveButton={true}/>
+            <CryptoTable rows={generateRowData(selectedWatchlist.coins)} showLast7Days={false} showRemoveButton={true} removeCryptoCoin={handleRemoveCryptoCoin}/>
           </>
         ) : (
           <>

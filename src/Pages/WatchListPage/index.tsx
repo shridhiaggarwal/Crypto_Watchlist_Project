@@ -12,7 +12,7 @@ import { ICoinProps } from "../../Containers/CryptoTable";
 import { useFetchWatchlistsData } from "../../Hooks/use-fetch-watchlist-data/use-fetch-watchlists-data.hook";
 
 export interface IWatchlistProps {
-  id: number;
+  id: string;
   name: string;
   coins: Array<ICoinProps>;
 }
@@ -52,7 +52,7 @@ const Watchlists = () => {
   const [watchlists] =  useFetchWatchlistsData();
   const [snackbarState, setSnackbarState] = React.useState(false);
 
-  const handleWatchlistClick = (watchlistId: number) => {
+  const handleWatchlistClick = (watchlistId: string) => {
     localStorage.setItem("watchlistId", JSON.stringify(watchlistId));
     navigate(`/watchlist/${watchlistId}`);
   };
@@ -64,26 +64,6 @@ const Watchlists = () => {
   const handleClose = () => {
     setSnackbarState(false);
   };
-
-  // const handleAddCrypto = (watchlistId: number, assetId: string) => {
-  //   // Find the watchlist by its ID
-  //   const watchlist = watchlists.find((w) => w.id === watchlistId);
-
-  //   if (watchlist && watchlist.coins) {
-  //     // Add the asset to the watchlist's assets array
-  //     watchlist.coins.push(assetId);
-  //   }
-  // };
-
-  // const handleRemoveAsset = (watchlistId: number, assetId: string) => {
-  //   // Find the watchlist by its ID
-  //   const watchlist = watchlists.find((w) => w.id === watchlistId);
-
-  //   if (watchlist) {
-  //     // Remove the asset from the watchlist's assets array
-  //     watchlist.coins = watchlist.coins.filter((coin) => asset !== assetId);
-  //   }
-  // };
 
   console.log("render Watchlists");
 

@@ -11,7 +11,7 @@ import Divider from "@material-ui/core/Divider";
 
 interface IWatchlistCard {
   watchlistData: IWatchlistProps;
-  onWatchlistClick: (watchlistId: number) => void;
+  onWatchlistClick: (watchlistId: string) => void;
 }
 
 const StyledTypography = styled(Typography)<{
