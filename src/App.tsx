@@ -11,8 +11,9 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Watchlists />} />
-          <Route path="/screener" element={<ScreenerPage />} />
           <Route path="/watchlist/:watchlistId" element={<CryptoListPage />} />
+          <Route path="/screener" element={<ScreenerPage />} />
+          <Route path="/screener/:watchlistId" element={<ScreenerPage />} />
         </Routes>
       </BrowserRouter>
     </>

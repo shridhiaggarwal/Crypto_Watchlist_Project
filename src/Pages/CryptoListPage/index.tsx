@@ -25,24 +25,45 @@ const StyledTypography = styled(Typography)<{
   margin: ${(props) => props.margin};
 `;
 
-const StyledButton = styled(Button)`
+const StyledTitleBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`;
+
+const StyledButton = styled(Button)<{
+  backgroundColor?: string;
+  color?: string;
+}>`
   text-transform: none;
+  background-color: ${(props) => props.backgroundColor};
+  color: ${(props) => props.color};
 `;
 
 const CryptoListPage = () => {
   const { watchlistId } = useParams();
   const navigate = useNavigate();
-  const [watchlists] =  useFetchWatchlistsData();
-  const [selectedWatchlist, setSelectedWatchlist] = React.useState<IWatchlistProps>();
+  const [watchlists] = useFetchWatchlistsData();
+  const [selectedWatchlist, setSelectedWatchlist] =
+    React.useState<IWatchlistProps>();
+
+  const handleAddCryptoCoin = () => {
+    if(selectedWatchlist){
+      navigate(`/screener/${selectedWatchlist.id}`);
+    }
+  };
 
   const handleRemoveCryptoCoin = (removeCoinSymbol: string) => {
     //update only selected watchlist and it coins array
-    if(selectedWatchlist){
-      let updatedCoins = selectedWatchlist.coins.filter((coin) => coin.symbol !== removeCoinSymbol);
+    if (selectedWatchlist) {
+      let updatedCoins = selectedWatchlist.coins.filter(
+        (coin) => coin.symbol !== removeCoinSymbol
+      );
       let updatedWatchlist = {
         ...selectedWatchlist,
         coins: updatedCoins,
-      }
+      };
       setSelectedWatchlist(updatedWatchlist);
 
       //update complete watchlists array in storage
@@ -54,7 +75,7 @@ const CryptoListPage = () => {
       });
       localStorage.setItem("watchlists", JSON.stringify(newWatchlists));
     }
-  }
+  };
 
   const handleGoBackClick = () => {
     localStorage.setItem("watchlistId", JSON.stringify(""));
@@ -63,26 +84,26 @@ const CryptoListPage = () => {
 
   const generateRowData = (watchlistCoins: any) => {
     let tableRows = watchlistCoins.map((coin: any, index: number) => {
-      const { rank, symbol, name, image, price, change, volume24h, mktCap, last7days } =
-        coin;
       return {
-        rank: rank,
-        symbol: symbol,
-        image: image,
-        name: name,
-        price: price,
-        change: change,
-        volume24h: volume24h,
-        mktCap: mktCap,
-        last7Days: last7days,
+        rank: coin.rank,
+        symbol: coin.symbol,
+        image: coin.image,
+        name: coin.name,
+        price: coin.price,
+        change: coin.change,
+        volume24h: coin.volume24h,
+        mktCap: coin.mktCap,
+        last7Days: coin.last7days,
       };
     });
     return tableRows;
   };
 
   React.useEffect(() => {
-    if(watchlists){
-      let result = watchlists.find((watchlist: IWatchlistProps) => watchlist.id === watchlistId);
+    if (watchlists && watchlistId) {
+      let result = watchlists.find(
+        (watchlist: IWatchlistProps) => watchlist.id === watchlistId
+      );
       setSelectedWatchlist(result);
     }
   }, [watchlists, watchlistId]);
@@ -102,10 +123,25 @@ const CryptoListPage = () => {
       <StyledPageContent>
         {selectedWatchlist ? (
           <>
-            <StyledTypography variant="h5" margin="0 0 16px 0">
-              {selectedWatchlist.name}
-            </StyledTypography>
-            <CryptoTable rows={generateRowData(selectedWatchlist.coins)} showLast7Days={false} showRemoveButton={true} removeCryptoCoin={handleRemoveCryptoCoin}/>
+            <StyledTitleBox>
+              <StyledTypography variant="h5">
+                {selectedWatchlist.name}
+              </StyledTypography>
+              <StyledButton
+                variant="contained"
+                backgroundColor="#4eaf0a"
+                color="white"
+                onClick={() => handleAddCryptoCoin()}
+              >
+                Add Coins
+              </StyledButton>
+            </StyledTitleBox>
+            <CryptoTable
+              rows={generateRowData(selectedWatchlist.coins)}
+              showLast7Days={false}
+              showRemoveButton={true}
+              removeCryptoCoin={handleRemoveCryptoCoin}
+            />
           </>
         ) : (
           <>

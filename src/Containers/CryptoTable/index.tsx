@@ -12,6 +12,7 @@ import styled from "styled-components";
 import CryptoGraph from "../CryptoGraph";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 interface ITableHeadCells {
   id: string;
@@ -48,6 +49,7 @@ interface ICryptoTableProps {
   rows: Array<ICoinProps>;
   showLast7Days: boolean;
   showAddButton?: boolean;
+  addCryptoCoin?: (addCoinData: ICoinProps) => void;
   showRemoveButton?: boolean;
   removeCryptoCoin?: (removeCoinSymbol: string) => void;
 }
@@ -86,12 +88,29 @@ const StyledButton = styled(Button)<{
   text-transform: none;
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.color};
+  &:hover {
+    background-color: ${(props) => props.backgroundColor};
+    color: ${(props) => props.color};
+  }
 `;
 
-const generateTableHeadCells = (showLast7Days: boolean) => {
+const StyledTypography = styled(Typography)<{
+  "font-color"?: string;
+  margin?: string;
+  component?: string;
+}>`
+  color: ${(props) => props["font-color"]};
+  margin: ${(props) => props["margin"]};
+`;
+
+const generateTableHeadCells = (
+  showLast7Days: boolean,
+  showAddButton?: boolean,
+  showRemoveButton?: boolean
+) => {
   let tableHeadCells: ITableHeadCells[] = [
     { id: "rank", align: "left", disablePadding: true, label: "#" },
-    { id: "coinNameIcon", align: "left", disablePadding: false, label: "Coin" },
+    { id: "coinNameIcon", align: "left", disablePadding: false, label: "Name" },
     { id: "price", align: "left", disablePadding: false, label: "Price" },
     { id: "change", align: "left", disablePadding: false, label: "Change" },
     {
@@ -111,13 +130,15 @@ const generateTableHeadCells = (showLast7Days: boolean) => {
       label: "Last 7 Days",
     });
   }
-  
-  tableHeadCells.push({
-    id: "action",
-    align: "left",
-    disablePadding: false,
-    label: "",
-  });
+
+  if (showAddButton || showRemoveButton) {
+    tableHeadCells.push({
+      id: "action",
+      align: "left",
+      disablePadding: false,
+      label: "",
+    });
+  }
 
   return tableHeadCells;
 };
@@ -159,7 +180,14 @@ const CryptoTableHead = (props: ITableHeadProps) => {
 };
 
 const CryptoTable = (props: ICryptoTableProps) => {
-  const { rows, showLast7Days, showAddButton, showRemoveButton, removeCryptoCoin } = props;
+  const {
+    rows,
+    showLast7Days,
+    showAddButton,
+    addCryptoCoin,
+    showRemoveButton,
+    removeCryptoCoin,
+  } = props;
   const [order, setOrder] = React.useState<TableOrder>(TableOrder.ASC);
   const [orderBy, setOrderBy] = React.useState("rank");
   const [page, setPage] = React.useState(0);
@@ -229,7 +257,11 @@ const CryptoTable = (props: ICryptoTableProps) => {
       <TableContainer>
         <Table>
           <CryptoTableHead
-            headCells={generateTableHeadCells(showLast7Days)}
+            headCells={generateTableHeadCells(
+              showLast7Days,
+              showAddButton,
+              showRemoveButton
+            )}
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -254,30 +286,29 @@ const CryptoTable = (props: ICryptoTableProps) => {
                       <StyledAlignedCell>
                         <StyledImage src={row.image} />
                         {row.name}
+                        <StyledTypography margin="0 0 0 8px" font-color="#808a9d">{row.symbol}</StyledTypography>
                       </StyledAlignedCell>
                     </TableCell>
                     <TableCell align="left">{row.price}</TableCell>
                     <TableCell align="left">{row.change}</TableCell>
                     <TableCell align="left">{row.volume24h}</TableCell>
                     <TableCell align="left">{row.mktCap}</TableCell>
-                    <TableCell align="left">
-                      {row.last7Days && (
+                    {row.last7Days && (
+                      <TableCell align="left">
                         <CryptoGraph graphData={row.last7Days} />
-                      )}
-                    </TableCell>
+                      </TableCell>
+                    )}
                     <TableCell align="left">
-                      {showAddButton && (
+                      {showAddButton && addCryptoCoin && (
                         <StyledButton
                           variant="contained"
                           backgroundColor="#4eaf0a"
                           color="white"
-                          onClick={() => {}}
+                          onClick={() => addCryptoCoin(row)}
                         >
                           Add
                         </StyledButton>
                       )}
-                    </TableCell>
-                    <TableCell align="left">
                       {showRemoveButton && removeCryptoCoin && (
                         <StyledButton
                           variant="contained"
