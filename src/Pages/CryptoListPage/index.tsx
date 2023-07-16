@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -8,8 +8,10 @@ import styled from "styled-components";
 import { IWatchlistProps } from "../WatchListPage";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import CryptoTable from "../../Containers/CryptoTable";
+import CryptoTable, { ICoinProps } from "../../Containers/CryptoTable";
 import { useFetchWatchlistsData } from "../../Hooks/use-fetch-watchlist-data/use-fetch-watchlists-data.hook";
+import { SnackbarContext } from "../../Contexts/SnackbarContext";
+import SnackbarComponent from "../../Components/Snackbar";
 
 const StyledPageBox = styled(Box)`
   margin: 16px 16px;
@@ -47,6 +49,7 @@ const CryptoListPage = () => {
   const [watchlists] = useFetchWatchlistsData();
   const [selectedWatchlist, setSelectedWatchlist] =
     React.useState<IWatchlistProps>();
+  const { showSnackbar } = useContext<any>(SnackbarContext);
 
   const handleAddCryptoCoin = () => {
     if(selectedWatchlist){
@@ -54,11 +57,11 @@ const CryptoListPage = () => {
     }
   };
 
-  const handleRemoveCryptoCoin = (removeCoinSymbol: string) => {
+  const handleRemoveCryptoCoin = (removeCoinData: ICoinProps) => {
     //update only selected watchlist and it coins array
     if (selectedWatchlist) {
       let updatedCoins = selectedWatchlist.coins.filter(
-        (coin) => coin.symbol !== removeCoinSymbol
+        (coin) => coin.symbol !== removeCoinData.symbol
       );
       let updatedWatchlist = {
         ...selectedWatchlist,
@@ -74,6 +77,7 @@ const CryptoListPage = () => {
         return watchlist;
       });
       localStorage.setItem("watchlists", JSON.stringify(newWatchlists));
+      showSnackbar(`${removeCoinData.name} Coin is successfully removed from the ${selectedWatchlist.name}`);
     }
   };
 
@@ -108,7 +112,7 @@ const CryptoListPage = () => {
     }
   }, [watchlists, watchlistId]);
 
-  console.log("render CryptoListPage");
+  // console.log("render CryptoListPage");
 
   return (
     <StyledPageBox>
@@ -151,6 +155,7 @@ const CryptoListPage = () => {
           </>
         )}
       </StyledPageContent>
+      <SnackbarComponent />
     </StyledPageBox>
   );
 };

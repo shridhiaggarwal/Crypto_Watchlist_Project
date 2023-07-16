@@ -7,8 +7,6 @@ import CloseIcon from "@material-ui/icons/Close";
 function SnackbarComponent() {
   const { open, message, handleClose } = useContext<any>(SnackbarContext);
 
-  console.log("message");
-
   return (
     <Snackbar
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

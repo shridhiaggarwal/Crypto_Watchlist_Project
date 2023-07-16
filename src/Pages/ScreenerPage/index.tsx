@@ -15,8 +15,10 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { SnackbarContext } from "../../Contexts/SnackbarContext";
 import SnackbarComponent from "../../Components/Snackbar";
 
-const StyledPageBox = styled(Box)`
-  margin: 16px 16px;
+const StyledPageBox = styled(Box)<{
+  showButton?: boolean
+}>`
+  margin: ${props => props.showButton ? "16px 16px" : "32px 16px 0px 16px"};
 `;
 
 const StyledPageContent = styled(Box)`
@@ -46,22 +48,27 @@ const ScreenerPage = () => {
   const [watchlists] = useFetchWatchlistsData();
   const [selectedWatchlist, setSelectedWatchlist] = useState<IWatchlistProps>();
   const { showSnackbar } = useContext<any>(SnackbarContext);
+  const [watchlistCoinsSet, setWatchlistCoinsSet] = useState<Set<string>>();
 
-  console.log("rendering ScreenerPage", watchlistId);
+  console.log("watchlistCoinsSet", watchlistCoinsSet)
+
+  // console.log("rendering ScreenerPage");
 
   const handleAddCryptoCoin = (addCoinData: ICoinProps) => {
     debugger;
     // update only selected watchlist and it coins array
     if (selectedWatchlist) {
-      selectedWatchlist.coins.push(addCoinData);
-      let updatedWatchlist = {
+      const updatedCoins = [...selectedWatchlist.coins, addCoinData];
+      const updatedWatchlist = {
         ...selectedWatchlist,
-        coins: selectedWatchlist.coins,
+        coins: updatedCoins,
       };
       setSelectedWatchlist(updatedWatchlist);
+      let coinsSet: Set<string> = new Set(updatedCoins.map((coin: ICoinProps) => coin.symbol));
+      setWatchlistCoinsSet(coinsSet);
 
       // update complete watchlists array in storage
-      let newWatchlists = watchlists.map((watchlist: IWatchlistProps) => {
+      const newWatchlists = watchlists.map((watchlist: IWatchlistProps) => {
         if (watchlist.id === watchlistId) {
           return updatedWatchlist;
         }
@@ -99,19 +106,21 @@ const ScreenerPage = () => {
         (watchlist: IWatchlistProps) => watchlist.id === watchlistId
       );
       setSelectedWatchlist(result);
+      let coinsSet: Set<string> = new Set(result.coins.map((coin: ICoinProps) => coin.symbol));
+      setWatchlistCoinsSet(coinsSet);
     }
   }, [watchlists, watchlistId]);
 
   return (
-    <StyledPageBox>
-      <StyledButton
+    <StyledPageBox showButton={!!selectedWatchlist}> 
+      {selectedWatchlist && <StyledButton
         variant="contained"
         color="primary"
         size="small"
         onClick={() => handleGoBackClick()}
       >
         <ChevronLeftIcon /> Back
-      </StyledButton>
+      </StyledButton>}
       <StyledPageContent>
         <StyledTypography variant="h4" margin="0 0 24px 0">
           {selectedWatchlist
@@ -125,6 +134,7 @@ const ScreenerPage = () => {
         ) : (
           <CryptoTable
             rows={generateRowData(cryptoCoins)}
+            watchlistCoinsSet={watchlistCoinsSet}
             showLast7Days={true}
             showAddButton={!!watchlistId}
             addCryptoCoin={!!watchlistId ? handleAddCryptoCoin : () => {}}

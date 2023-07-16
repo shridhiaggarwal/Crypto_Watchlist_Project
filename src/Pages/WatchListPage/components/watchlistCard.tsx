@@ -85,6 +85,8 @@ function WatchlistCard(props: IWatchlistCard) {
       aria-label={`watchlist-${watchlistData.id}`}
     >
       <StyledCardContent>
+
+        {/* watchlist title and view more button */}
         <StyledTitleBox>
           <StyledTypography variant="h6" fontWeight="bolder">
             {watchlistData.name}
@@ -97,6 +99,8 @@ function WatchlistCard(props: IWatchlistCard) {
             View More <ChevronRightIcon />
           </StyledButton>
         </StyledTitleBox>
+
+        {/* watchlist card list header - coin and price */}
         <StyledCoinsHeader>
           <StyledTypography variant="body1" flexgrow={1}>
             Coin
@@ -104,6 +108,8 @@ function WatchlistCard(props: IWatchlistCard) {
           <StyledTypography variant="body1">Price</StyledTypography>
         </StyledCoinsHeader>
         <StyledDivider />
+
+        {/* watchlist card list content - name, image and price */}
         <StyledCoinsContent>
           {watchlistData.coins.slice(0, 10).map((coin, index) => {
             const { name, image, price } = coin;

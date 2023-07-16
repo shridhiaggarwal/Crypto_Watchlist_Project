@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import watchlistsJson from "../../Jsons/watchlists.json";
 
 export function useFetchWatchlistsData() {
-  const [watchlists, setWatchLists] =  React.useState<any>();
+  const [watchlists, setWatchLists] =  useState<any>();
 
-  React.useEffect(()=>{
+  useEffect(()=>{
     const localWatchLists = localStorage.getItem("watchlists");
     if(localWatchLists === null){
         localStorage.setItem("watchlists", JSON.stringify(watchlistsJson.watchlists));
@@ -14,5 +14,5 @@ export function useFetchWatchlistsData() {
     }
   }, []);
 
-  return [watchlists];
+  return watchlists;
 }

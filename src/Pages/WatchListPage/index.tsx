@@ -48,7 +48,7 @@ const StyledButton = styled(Button)`
 
 const Watchlists = () => {
   const navigate = useNavigate();
-  const [watchlists] =  useFetchWatchlistsData();
+  const watchlists = useFetchWatchlistsData();
   const { showSnackbar } = useContext<any>(SnackbarContext);
 
   const handleWatchlistClick = (watchlistId: string) => {
@@ -57,13 +57,12 @@ const Watchlists = () => {
   };
 
   const featureComingSoon = () => {
-    showSnackbar("Feature not avaiable.")
+    showSnackbar("Feature not avaiable.");
   };
-
-  console.log("render Watchlists");
 
   return (
     <StyledPageBox>
+      {/* header title and button */}
       <StyledTitleBox>
         <StyledTypography variant="h4">Crypto Watchlists</StyledTypography>
         <StyledButton
@@ -74,6 +73,8 @@ const Watchlists = () => {
           Create WatchList
         </StyledButton>
       </StyledTitleBox>
+
+      {/* subtitle */}
       <StyledTypography
         variant="body1"
         color="textSecondary"
@@ -82,15 +83,20 @@ const Watchlists = () => {
         Track and discover the most interesting cryptocurrencies based on
         market, CryptoWatch and CoinGecko activity.
       </StyledTypography>
+
+      {/* watchlists cards */}
       <StyledWatchlistBox>
-        {watchlists && watchlists.map((watchlist: IWatchlistProps, index: number) => (
-          <WatchlistCard
-            key={`watchlist-${index}`}
-            watchlistData={watchlist}
-            onWatchlistClick={handleWatchlistClick}
-          />
-        ))}
+        {watchlists &&
+          watchlists.map((watchlist: IWatchlistProps, index: number) => (
+            <WatchlistCard
+              key={`watchlist-${index}`}
+              watchlistData={watchlist}
+              onWatchlistClick={handleWatchlistClick}
+            />
+          ))}
       </StyledWatchlistBox>
+
+      {/* snackbar component */}
       <SnackbarComponent />
     </StyledPageBox>
   );

@@ -13,6 +13,8 @@ import CryptoGraph from "../CryptoGraph";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 interface ITableHeadCells {
   id: string;
@@ -47,11 +49,12 @@ export interface ICoinProps {
 
 interface ICryptoTableProps {
   rows: Array<ICoinProps>;
+  watchlistCoinsSet?: Set<string>;
   showLast7Days: boolean;
   showAddButton?: boolean;
   addCryptoCoin?: (addCoinData: ICoinProps) => void;
   showRemoveButton?: boolean;
-  removeCryptoCoin?: (removeCoinSymbol: string) => void;
+  removeCryptoCoin?: (removeCoinSymbol: ICoinProps) => void;
 }
 
 const StyledVisuallyHidden = styled.span`
@@ -92,6 +95,17 @@ const StyledButton = styled(Button)<{
     background-color: ${(props) => props.backgroundColor};
     color: ${(props) => props.color};
   }
+`;
+
+const StyledCheckCircleIcon = styled(CheckCircleIcon)`
+  margin-right: 8px;
+`;
+
+const StyledCircularProgress = styled(CircularProgress)<{
+  color: string;
+}>`
+  color: ${(props) => props.color};
+  margin-left: 8px;
 `;
 
 const StyledTypography = styled(Typography)<{
@@ -182,6 +196,7 @@ const CryptoTableHead = (props: ITableHeadProps) => {
 const CryptoTable = (props: ICryptoTableProps) => {
   const {
     rows,
+    watchlistCoinsSet,
     showLast7Days,
     showAddButton,
     addCryptoCoin,
@@ -193,7 +208,7 @@ const CryptoTable = (props: ICryptoTableProps) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  console.log("rendering CryptoTable");
+  // console.log("rendering CryptoTable");
 
   const descendingComparator = (a: any, b: any, orderBy: any) => {
     if (orderBy === "coinNameIcon") {
@@ -271,6 +286,8 @@ const CryptoTable = (props: ICryptoTableProps) => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row: any, index: number) => {
                 const labelId = `crypto-table-${index}`;
+                const isWatchlistHasCoin =
+                  watchlistCoinsSet && watchlistCoinsSet.has(row.symbol);
 
                 return (
                   <TableRow hover tabIndex={-1} key={row.rank}>
@@ -286,7 +303,12 @@ const CryptoTable = (props: ICryptoTableProps) => {
                       <StyledAlignedCell>
                         <StyledImage src={row.image} />
                         {row.name}
-                        <StyledTypography margin="0 0 0 8px" fontColor="#808a9d">{row.symbol}</StyledTypography>
+                        <StyledTypography
+                          margin="0 0 0 8px"
+                          fontColor="#808a9d"
+                        >
+                          {row.symbol}
+                        </StyledTypography>
                       </StyledAlignedCell>
                     </TableCell>
                     <TableCell align="left">{row.price}</TableCell>
@@ -302,11 +324,19 @@ const CryptoTable = (props: ICryptoTableProps) => {
                       {showAddButton && addCryptoCoin && (
                         <StyledButton
                           variant="contained"
-                          backgroundColor="#4eaf0a"
+                          backgroundColor={
+                            isWatchlistHasCoin ? "default" : "#4eaf0a"
+                          }
                           color="white"
                           onClick={() => addCryptoCoin(row)}
                         >
-                          Add
+                          {isWatchlistHasCoin ? (
+                            <>
+                              <StyledCheckCircleIcon /> Added
+                            </>
+                          ) : (
+                            <>Add</>
+                          )}
                         </StyledButton>
                       )}
                       {showRemoveButton && removeCryptoCoin && (
@@ -314,7 +344,7 @@ const CryptoTable = (props: ICryptoTableProps) => {
                           variant="contained"
                           backgroundColor="#DC143C"
                           color="white"
-                          onClick={() => removeCryptoCoin(row.symbol)}
+                          onClick={() => removeCryptoCoin(row)}
                         >
                           Remove
                         </StyledButton>
