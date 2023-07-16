@@ -16,9 +16,9 @@ import { SnackbarContext } from "../../Contexts/SnackbarContext";
 import SnackbarComponent from "../../Components/Snackbar";
 
 const StyledPageBox = styled(Box)<{
-  showButton?: boolean
+  showButton?: boolean;
 }>`
-  margin: ${props => props.showButton ? "16px 16px" : "32px 16px 0px 16px"};
+  margin: ${(props) => (props.showButton ? "16px 16px" : "32px 16px 0px 16px")};
 `;
 
 const StyledPageContent = styled(Box)`
@@ -43,19 +43,14 @@ const StyledButton = styled(Button)<{
 const ScreenerPage = () => {
   const { watchlistId } = useParams();
   const navigate = useNavigate();
-  const [cryptoList, isListLoading, errorListData] = [[], false, false]; //useFetchCryptoListData();
   const cryptoCoins: Array<ICoinProps> = cryptoCoinsJson.coins;
   const watchlists = useFetchWatchlistsData();
   const [selectedWatchlist, setSelectedWatchlist] = useState<IWatchlistProps>();
   const { showSnackbar } = useContext<any>(SnackbarContext);
   const [watchlistCoinsSet, setWatchlistCoinsSet] = useState<Set<string>>();
 
-  console.log("watchlistCoinsSet", watchlistCoinsSet)
-
-  // console.log("rendering ScreenerPage");
-
+  // add coin to watchlist
   const handleAddCryptoCoin = (addCoinData: ICoinProps) => {
-    debugger;
     // update only selected watchlist and it coins array
     if (selectedWatchlist) {
       const updatedCoins = [...selectedWatchlist.coins, addCoinData];
@@ -64,7 +59,9 @@ const ScreenerPage = () => {
         coins: updatedCoins,
       };
       setSelectedWatchlist(updatedWatchlist);
-      let coinsSet: Set<string> = new Set(updatedCoins.map((coin: ICoinProps) => coin.symbol));
+      let coinsSet: Set<string> = new Set(
+        updatedCoins.map((coin: ICoinProps) => coin.symbol)
+      );
       setWatchlistCoinsSet(coinsSet);
 
       // update complete watchlists array in storage
@@ -75,14 +72,18 @@ const ScreenerPage = () => {
         return watchlist;
       });
       localStorage.setItem("watchlists", JSON.stringify(newWatchlists));
-      showSnackbar(`${addCoinData.name} Coin is successfully added in the ${selectedWatchlist.name}`);
+      showSnackbar(
+        `${addCoinData.name} Coin is successfully added in the ${selectedWatchlist.name}`
+      );
     }
   };
 
+  // go back to home page
   const handleGoBackClick = () => {
     navigate(`/watchlist/${watchlistId}`);
   };
 
+  // generate rows data to pass in CryptTable to show coins data
   const generateRowData = (cryptoCoins: any) => {
     let tableRows = cryptoCoins.map((coin: any, index: number) => {
       return {
@@ -100,46 +101,49 @@ const ScreenerPage = () => {
     return tableRows;
   };
 
+  // to get selected watchlist data
   React.useEffect(() => {
     if (watchlists && watchlistId) {
       let result = watchlists.find(
         (watchlist: IWatchlistProps) => watchlist.id === watchlistId
       );
       setSelectedWatchlist(result);
-      let coinsSet: Set<string> = new Set(result.coins.map((coin: ICoinProps) => coin.symbol));
+      let coinsSet: Set<string> = new Set(
+        result.coins.map((coin: ICoinProps) => coin.symbol)
+      );
       setWatchlistCoinsSet(coinsSet);
     }
   }, [watchlists, watchlistId]);
 
   return (
-    <StyledPageBox showButton={!!selectedWatchlist}> 
-      {selectedWatchlist && <StyledButton
-        variant="contained"
-        color="primary"
-        size="small"
-        onClick={() => handleGoBackClick()}
-      >
-        <ChevronLeftIcon /> Back
-      </StyledButton>}
+    <StyledPageBox showButton={!!selectedWatchlist}>
+      {/* if it is screen page to add coins, show go back button */}
+      {selectedWatchlist && (
+        <StyledButton
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => handleGoBackClick()}
+        >
+          <ChevronLeftIcon /> Back
+        </StyledButton>
+      )}
       <StyledPageContent>
+        {/* title based on add coins screener page and normal coins screener page*/}
         <StyledTypography variant="h4" margin="0 0 24px 0">
           {selectedWatchlist
             ? `Add Coins to "${selectedWatchlist.name}" Watchlist`
             : "Cryptocurrency Prices by Rank"}
         </StyledTypography>
-        {isListLoading ? (
-          <Box width="100%" height="100%">
-            <CircularProgress />
-          </Box>
-        ) : (
-          <CryptoTable
-            rows={generateRowData(cryptoCoins)}
-            watchlistCoinsSet={watchlistCoinsSet}
-            showLast7Days={true}
-            showAddButton={!!watchlistId}
-            addCryptoCoin={!!watchlistId ? handleAddCryptoCoin : () => {}}
-          />
-        )}
+
+        {/* cryptoTable to show coins data */}
+        <CryptoTable
+          rows={generateRowData(cryptoCoins)}
+          watchlistCoinsSet={watchlistCoinsSet}
+          showLast7Days={true}
+          showAddButton={!!selectedWatchlist}
+          addCryptoCoin={!!selectedWatchlist ? handleAddCryptoCoin : () => {}}
+        />
       </StyledPageContent>
       <SnackbarComponent />
     </StyledPageBox>
