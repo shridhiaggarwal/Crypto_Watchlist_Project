@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -15,10 +15,12 @@ import SnackbarComponent from "../../Components/Snackbar";
 
 const StyledPageBox = styled(Box)`
   margin: 16px 16px;
+  height: 100%;
 `;
 
 const StyledPageContent = styled(Box)`
   margin: 24px 32px;
+  height: 100%;
 `;
 
 const StyledTypography = styled(Typography)<{
@@ -46,17 +48,18 @@ const StyledButton = styled(Button)<{
 const CryptoListPage = () => {
   const { watchlistId } = useParams();
   const navigate = useNavigate();
-  const [watchlists] = useFetchWatchlistsData();
-  const [selectedWatchlist, setSelectedWatchlist] =
-    React.useState<IWatchlistProps>();
+  const watchlists = useFetchWatchlistsData();
+  const [selectedWatchlist, setSelectedWatchlist] = useState<IWatchlistProps>();
   const { showSnackbar } = useContext<any>(SnackbarContext);
 
+  // redirect to screener page to choose the coins to add in watchlist
   const handleAddCryptoCoin = () => {
-    if(selectedWatchlist){
+    if (selectedWatchlist) {
       navigate(`/screener/${selectedWatchlist.id}`);
     }
   };
 
+  // remove coin from watchlist
   const handleRemoveCryptoCoin = (removeCoinData: ICoinProps) => {
     //update only selected watchlist and it coins array
     if (selectedWatchlist) {
@@ -77,15 +80,19 @@ const CryptoListPage = () => {
         return watchlist;
       });
       localStorage.setItem("watchlists", JSON.stringify(newWatchlists));
-      showSnackbar(`${removeCoinData.name} Coin is successfully removed from the ${selectedWatchlist.name}`);
+      showSnackbar(
+        `${removeCoinData.name} Coin is successfully removed from the ${selectedWatchlist.name}`
+      );
     }
   };
 
+  // go back to home page
   const handleGoBackClick = () => {
     localStorage.setItem("watchlistId", JSON.stringify(""));
     navigate(`/`);
   };
 
+  // generate rows data to pass in CryptTable to show coins data
   const generateRowData = (watchlistCoins: any) => {
     let tableRows = watchlistCoins.map((coin: any, index: number) => {
       return {
@@ -103,6 +110,7 @@ const CryptoListPage = () => {
     return tableRows;
   };
 
+  // to get selected watchlist data
   React.useEffect(() => {
     if (watchlists && watchlistId) {
       let result = watchlists.find(
@@ -112,10 +120,10 @@ const CryptoListPage = () => {
     }
   }, [watchlists, watchlistId]);
 
-  // console.log("render CryptoListPage");
 
   return (
     <StyledPageBox>
+      {/* go back button */}
       <StyledButton
         variant="contained"
         color="primary"
@@ -127,6 +135,7 @@ const CryptoListPage = () => {
       <StyledPageContent>
         {selectedWatchlist ? (
           <>
+            {/* watchlist title and add coins button */}
             <StyledTitleBox>
               <StyledTypography variant="h5">
                 {selectedWatchlist.name}
@@ -140,6 +149,8 @@ const CryptoListPage = () => {
                 Add Coins
               </StyledButton>
             </StyledTitleBox>
+
+            {/* cryptoTable to show coins data */}
             <CryptoTable
               rows={generateRowData(selectedWatchlist.coins)}
               showLast7Days={false}
@@ -149,7 +160,8 @@ const CryptoListPage = () => {
           </>
         ) : (
           <>
-            <Box width="100%" height="100%">
+            {/* progress bar to show data loading */}
+            <Box height='100%' display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
               <CircularProgress />
             </Box>
           </>

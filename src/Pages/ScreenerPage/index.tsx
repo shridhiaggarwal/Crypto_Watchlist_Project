@@ -45,7 +45,7 @@ const ScreenerPage = () => {
   const navigate = useNavigate();
   const [cryptoList, isListLoading, errorListData] = [[], false, false]; //useFetchCryptoListData();
   const cryptoCoins: Array<ICoinProps> = cryptoCoinsJson.coins;
-  const [watchlists] = useFetchWatchlistsData();
+  const watchlists = useFetchWatchlistsData();
   const [selectedWatchlist, setSelectedWatchlist] = useState<IWatchlistProps>();
   const { showSnackbar } = useContext<any>(SnackbarContext);
   const [watchlistCoinsSet, setWatchlistCoinsSet] = useState<Set<string>>();
