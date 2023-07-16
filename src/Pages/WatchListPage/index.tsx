@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import WatchlistCard from "./components/watchlistCard";
-import CloseIcon from "@material-ui/icons/Close";
 import { ICoinProps } from "../../Containers/CryptoTable";
 import { useFetchWatchlistsData } from "../../Hooks/use-fetch-watchlist-data/use-fetch-watchlists-data.hook";
+import { SnackbarContext } from "../../Contexts/SnackbarContext";
+import SnackbarComponent from "../../Components/Snackbar";
 
 export interface IWatchlistProps {
   id: string;
@@ -22,12 +21,12 @@ const StyledPageBox = styled(Box)`
 `;
 
 const StyledTypography = styled(Typography)<{
-  "font-color"?: string;
+  fontColor?: string;
   margin?: string;
   component?: string;
 }>`
-  color: ${(props) => props["font-color"]};
-  margin: ${(props) => props["margin"]};
+  color: ${(props) => props.fontColor};
+  margin: ${(props) => props.margin};
 `;
 
 const StyledWatchlistBox = styled(Box)`
@@ -50,7 +49,7 @@ const StyledButton = styled(Button)`
 const Watchlists = () => {
   const navigate = useNavigate();
   const [watchlists] =  useFetchWatchlistsData();
-  const [snackbarState, setSnackbarState] = React.useState(false);
+  const { showSnackbar } = useContext<any>(SnackbarContext);
 
   const handleWatchlistClick = (watchlistId: string) => {
     localStorage.setItem("watchlistId", JSON.stringify(watchlistId));
@@ -58,11 +57,7 @@ const Watchlists = () => {
   };
 
   const featureComingSoon = () => {
-    setSnackbarState(true);
-  };
-
-  const handleClose = () => {
-    setSnackbarState(false);
+    showSnackbar("Feature not avaiable.")
   };
 
   console.log("render Watchlists");
@@ -96,25 +91,7 @@ const Watchlists = () => {
           />
         ))}
       </StyledWatchlistBox>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={snackbarState}
-        onClose={handleClose}
-        autoHideDuration={6000}
-        message="This feature is not available."
-        key={"bottom" + "right"}
-        action={
-          <React.Fragment>
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              onClick={handleClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
+      <SnackbarComponent />
     </StyledPageBox>
   );
 };

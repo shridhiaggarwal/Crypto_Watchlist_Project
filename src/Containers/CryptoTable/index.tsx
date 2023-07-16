@@ -95,12 +95,12 @@ const StyledButton = styled(Button)<{
 `;
 
 const StyledTypography = styled(Typography)<{
-  "font-color"?: string;
+  fontColor?: string;
   margin?: string;
   component?: string;
 }>`
-  color: ${(props) => props["font-color"]};
-  margin: ${(props) => props["margin"]};
+  color: ${(props) => props.fontColor};
+  margin: ${(props) => props.margin};
 `;
 
 const generateTableHeadCells = (
@@ -286,7 +286,7 @@ const CryptoTable = (props: ICryptoTableProps) => {
                       <StyledAlignedCell>
                         <StyledImage src={row.image} />
                         {row.name}
-                        <StyledTypography margin="0 0 0 8px" font-color="#808a9d">{row.symbol}</StyledTypography>
+                        <StyledTypography margin="0 0 0 8px" fontColor="#808a9d">{row.symbol}</StyledTypography>
                       </StyledAlignedCell>
                     </TableCell>
                     <TableCell align="left">{row.price}</TableCell>

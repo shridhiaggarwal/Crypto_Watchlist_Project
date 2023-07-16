@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFetchCryptoListData } from "../../Hooks/use-fetch-cryptolist-data/use-fetch-cryptolist-data.hook";
 import Box from "@material-ui/core/Box";
 import CryptoTable from "../../Containers/CryptoTable";
@@ -12,6 +12,8 @@ import { useFetchWatchlistsData } from "../../Hooks/use-fetch-watchlist-data/use
 import { IWatchlistProps } from "../WatchListPage";
 import Button from "@material-ui/core/Button";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import { SnackbarContext } from "../../Contexts/SnackbarContext";
+import SnackbarComponent from "../../Components/Snackbar";
 
 const StyledPageBox = styled(Box)`
   margin: 16px 16px;
@@ -43,6 +45,7 @@ const ScreenerPage = () => {
   const cryptoCoins: Array<ICoinProps> = cryptoCoinsJson.coins;
   const [watchlists] = useFetchWatchlistsData();
   const [selectedWatchlist, setSelectedWatchlist] = useState<IWatchlistProps>();
+  const { showSnackbar } = useContext<any>(SnackbarContext);
 
   console.log("rendering ScreenerPage", watchlistId);
 
@@ -65,6 +68,7 @@ const ScreenerPage = () => {
         return watchlist;
       });
       localStorage.setItem("watchlists", JSON.stringify(newWatchlists));
+      showSnackbar(`${addCoinData.name} Coin is successfully added in the ${selectedWatchlist.name}`);
     }
   };
 
@@ -74,27 +78,16 @@ const ScreenerPage = () => {
 
   const generateRowData = (cryptoCoins: any) => {
     let tableRows = cryptoCoins.map((coin: any, index: number) => {
-      const {
-        rank,
-        symbol,
-        name,
-        image,
-        price,
-        change,
-        volume24h,
-        mktCap,
-        last7days,
-      } = coin;
       return {
-        rank: rank,
-        symbol: symbol,
-        image: image,
-        name: name,
-        price: price,
-        change: change,
-        volume24h: volume24h,
-        mktCap: mktCap,
-        last7Days: last7days,
+        rank: coin.rank,
+        symbol: coin.symbol,
+        image: coin.image,
+        name: coin.name,
+        price: coin.price,
+        change: coin.change,
+        volume24h: coin.volume24h,
+        mktCap: coin.mktCap,
+        last7Days: coin.last7days,
       };
     });
     return tableRows;
@@ -138,6 +131,7 @@ const ScreenerPage = () => {
           />
         )}
       </StyledPageContent>
+      <SnackbarComponent />
     </StyledPageBox>
   );
 };

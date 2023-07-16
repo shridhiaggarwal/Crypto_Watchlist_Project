@@ -15,14 +15,14 @@ interface IWatchlistCard {
 }
 
 const StyledTypography = styled(Typography)<{
-  "font-color"?: string;
+  fontColor?: string;
   margin?: string;
   component?: string;
   flexgrow?: number;
   fontWeight?: string;
 }>`
-  color: ${(props) => props["font-color"]};
-  margin: ${(props) => props["margin"]};
+  color: ${(props) => props.fontColor};
+  margin: ${(props) => props.margin};
   flex-grow: ${(props) => props.flexgrow};
   font-weight: ${(props) => props.fontWeight};
 `;
@@ -89,7 +89,11 @@ function WatchlistCard(props: IWatchlistCard) {
           <StyledTypography variant="h6" fontWeight="bolder">
             {watchlistData.name}
           </StyledTypography>
-          <StyledButton color="primary" size="medium" onClick={() => onWatchlistClick(watchlistData.id)}>
+          <StyledButton
+            color="primary"
+            size="medium"
+            onClick={() => onWatchlistClick(watchlistData.id)}
+          >
             View More <ChevronRightIcon />
           </StyledButton>
         </StyledTitleBox>
@@ -97,13 +101,11 @@ function WatchlistCard(props: IWatchlistCard) {
           <StyledTypography variant="body1" flexgrow={1}>
             Coin
           </StyledTypography>
-          <StyledTypography variant="body1">
-            Price
-          </StyledTypography>
+          <StyledTypography variant="body1">Price</StyledTypography>
         </StyledCoinsHeader>
         <StyledDivider />
         <StyledCoinsContent>
-          {watchlistData.coins.slice(0,10).map((coin, index) => {
+          {watchlistData.coins.slice(0, 10).map((coin, index) => {
             const { name, image, price } = coin;
             return (
               <StyledCoin key={`coin-${index}`}>
