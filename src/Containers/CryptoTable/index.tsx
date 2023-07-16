@@ -13,7 +13,6 @@ import CryptoGraph from "../CryptoGraph";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 interface ITableHeadCells {
@@ -49,8 +48,8 @@ export interface ICoinProps {
 
 interface ICryptoTableProps {
   rows: Array<ICoinProps>;
-  watchlistCoinsSet?: Set<string>;
   showLast7Days: boolean;
+  watchlistCoinsSet?: Set<string>;
   showAddButton?: boolean;
   addCryptoCoin?: (addCoinData: ICoinProps) => void;
   showRemoveButton?: boolean;
@@ -99,13 +98,6 @@ const StyledButton = styled(Button)<{
 
 const StyledCheckCircleIcon = styled(CheckCircleIcon)`
   margin-right: 8px;
-`;
-
-const StyledCircularProgress = styled(CircularProgress)<{
-  color: string;
-}>`
-  color: ${(props) => props.color};
-  margin-left: 8px;
 `;
 
 const StyledTypography = styled(Typography)<{
@@ -208,8 +200,6 @@ const CryptoTable = (props: ICryptoTableProps) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  // console.log("rendering CryptoTable");
-
   const descendingComparator = (a: any, b: any, orderBy: any) => {
     if (orderBy === "coinNameIcon") {
       // Sort by coin name
@@ -269,8 +259,10 @@ const CryptoTable = (props: ICryptoTableProps) => {
 
   return (
     <>
+      {/* crypto table container */}
       <TableContainer>
         <Table>
+          {/* crypto table header */}
           <CryptoTableHead
             headCells={generateTableHeadCells(
               showLast7Days,
@@ -281,6 +273,7 @@ const CryptoTable = (props: ICryptoTableProps) => {
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
           />
+          {/* crypto table body */}
           <TableBody>
             {stableSort(rows, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -320,8 +313,8 @@ const CryptoTable = (props: ICryptoTableProps) => {
                         <CryptoGraph graphData={row.last7Days} />
                       </TableCell>
                     )}
-                    <TableCell align="left">
-                      {showAddButton && addCryptoCoin && (
+                    {showAddButton && addCryptoCoin && (
+                      <TableCell align="left">
                         <StyledButton
                           variant="contained"
                           backgroundColor={
@@ -338,8 +331,10 @@ const CryptoTable = (props: ICryptoTableProps) => {
                             <>Add</>
                           )}
                         </StyledButton>
-                      )}
-                      {showRemoveButton && removeCryptoCoin && (
+                      </TableCell>
+                    )}
+                    {showRemoveButton && removeCryptoCoin && (
+                      <TableCell align="left">
                         <StyledButton
                           variant="contained"
                           backgroundColor="#DC143C"
@@ -348,8 +343,8 @@ const CryptoTable = (props: ICryptoTableProps) => {
                         >
                           Remove
                         </StyledButton>
-                      )}
-                    </TableCell>
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })}
@@ -361,6 +356,8 @@ const CryptoTable = (props: ICryptoTableProps) => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* crypto table pagination */}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

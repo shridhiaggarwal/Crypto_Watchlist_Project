@@ -142,7 +142,7 @@ const ScreenerPage = () => {
           watchlistCoinsSet={watchlistCoinsSet}
           showLast7Days={true}
           showAddButton={!!selectedWatchlist}
-          addCryptoCoin={!!selectedWatchlist ? handleAddCryptoCoin : () => {}}
+          addCryptoCoin={!!selectedWatchlist ? handleAddCryptoCoin : undefined}
         />
       </StyledPageContent>
       <SnackbarComponent />
