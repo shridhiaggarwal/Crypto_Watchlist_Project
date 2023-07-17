@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, IconButton, Button } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from 'react-router-dom';
@@ -22,7 +22,8 @@ const Navbar = () => {
   const classes = useStyles();
 
   return (
-    <AppBar position="static">
+    <>
+    <AppBar position="fixed">
       <Toolbar>
         <TrendingUpIcon className={classes.logoIcon}/>
         <Typography variant="h6" className={classes.logoTitle}>CryptoWatch</Typography>
@@ -30,6 +31,8 @@ const Navbar = () => {
         <Button color="inherit" className={classes.styledButton} component={Link} to="/screener">Screener</Button>
       </Toolbar>
     </AppBar>
+    <Toolbar></Toolbar>
+    </>
   );
 };
 
