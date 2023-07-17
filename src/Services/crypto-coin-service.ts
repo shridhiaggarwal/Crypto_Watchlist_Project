@@ -16,3 +16,4 @@ export const fetchCoinDetails = async (coinId: string) => {
       };
     }
   };
+  
